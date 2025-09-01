@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log*
+.next/cache
+.next/types
+.git
+.gitignore
+.dockerignore
+.env*
+.DS_Store
+.vscode
+.idea
+**/*.swp
+*.zip
+*.tar
+*.tar.gz
+

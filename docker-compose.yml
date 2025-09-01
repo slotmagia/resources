@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Next.js 应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_IMAGE: dockerproxy.com/library/node:20-alpine
+        RUNTIME_IMAGE: dockerproxy.com/library/node:20-alpine
+    container_name: ziyuanba-app
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - ziyuanba-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: ziyuanba-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      - app
+    networks:
+      - ziyuanba-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Certbot SSL 证书管理
+  certbot:
+    image: certbot/certbot
+    container_name: ziyuanba-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email --domains ${DOMAIN},www.${DOMAIN}
+    profiles:
+      - ssl-setup
+
+  # 证书续期服务
+  certbot-renew:
+    image: certbot/certbot
+    container_name: ziyuanba-certbot-renew
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: renew --quiet
+    profiles:
+      - ssl-renew
+
+networks:
+  ziyuanba-network:
+    driver: bridge
