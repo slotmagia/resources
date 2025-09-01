@@ -91,7 +91,7 @@ export default function RegisterPage() {
       
       // 注册成功，跳转到首页
       router.push('/');
-    } catch (err) {
+    } catch {
       // 错误处理在store中完成
     }
   };

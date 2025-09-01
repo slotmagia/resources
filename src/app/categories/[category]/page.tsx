@@ -71,7 +71,7 @@ function CategoryPageContent() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
-  const initializedRef = useRef(false);
+
 
   const category = decodeURIComponent(params.category as string);
   const sortBy = searchParams.get('sort') || 'latest';

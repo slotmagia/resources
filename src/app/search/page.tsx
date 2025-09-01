@@ -41,7 +41,7 @@ function SearchPageContent() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const initializedRef = useRef(false);
+
 
   const query = searchParams.get('q') || '';
   const category = searchParams.get('category') || '';

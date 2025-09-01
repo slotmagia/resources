@@ -48,7 +48,7 @@ function ResourcesContent() {
     }
     
     initializedRef.current = true;
-  }, [searchParams]); // 移除 setFilters 和 fetchResources 依赖
+  }, [searchParams, setFilters, fetchResources]);
 
   const handleSearch = useCallback((query: string) => {
     searchResources(query);

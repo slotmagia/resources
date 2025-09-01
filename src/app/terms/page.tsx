@@ -26,7 +26,7 @@ export default function TermsPage() {
       content: (
         <div className="space-y-4">
           <p className="text-gray-700 leading-relaxed">
-            欢迎使用资源吧（以下简称"本平台"）！本服务协议（以下简称"本协议"）是您与资源吧之间关于使用本平台服务的法律协议。
+            欢迎使用资源吧（以下简称&ldquo;本平台&rdquo;）！本服务协议（以下简称&ldquo;本协议&rdquo;）是您与资源吧之间关于使用本平台服务的法律协议。
           </p>
           <p className="text-gray-700 leading-relaxed">
             本平台致力于为用户提供优质的数字资源下载服务，包括但不限于软件、视频教程、文档资料、技术文章等内容。
@@ -369,7 +369,7 @@ export default function TermsPage() {
                     • 如您对协议内容有任何疑问，请在使用服务前联系我们的客服团队。
                   </p>
                   <p>
-                    • 您点击"同意"或使用我们的服务即表示您已阅读并同意本协议的全部条款。
+                    • 您点击&ldquo;同意&rdquo;或使用我们的服务即表示您已阅读并同意本协议的全部条款。
                   </p>
                 </div>
               </div>

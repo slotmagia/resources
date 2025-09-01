@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { MainLayout } from '@/components/layout';
 import { useResourceStore } from '@/stores';
 import { Hero } from '@/components/features/Hero';

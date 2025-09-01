@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { MainLayout } from '@/components/layout';
 import { useAuthStore } from '@/stores';
@@ -105,7 +105,7 @@ const notificationTypes = [
 ];
 
 export default function NotificationsPage() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [selectedType, setSelectedType] = useState('all');
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);

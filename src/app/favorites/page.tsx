@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { MainLayout } from '@/components/layout';
 import { useAuthStore } from '@/stores';
@@ -120,7 +120,7 @@ const favoriteFolders = [
 ];
 
 export default function FavoritesPage() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [favorites, setFavorites] = useState(mockFavorites);
   const [selectedFolder, setSelectedFolder] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');

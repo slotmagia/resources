@@ -98,7 +98,7 @@ export default function ContactPage() {
         subject: '',
         message: ''
       });
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -287,7 +287,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">如何上传资源？</h3>
               <p className="text-gray-600">
-                登录后，您可以在个人中心找到"上传资源"功能。我们欢迎优质的原创资源，通过审核后将获得相应奖励。
+                登录后，您可以在个人中心找到&ldquo;上传资源&rdquo;功能。我们欢迎优质的原创资源，通过审核后将获得相应奖励。
               </p>
             </div>
           </div>

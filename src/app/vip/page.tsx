@@ -125,10 +125,9 @@ const faqs = [
 ];
 
 export default function VipPage() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const { addItem } = useCartStore();
   const [selectedPlan, setSelectedPlan] = useState('quarterly');
-  const [paymentMethod, setPaymentMethod] = useState('alipay');
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
