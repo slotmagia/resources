@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { useStableResourceStore } from '@/hooks';
@@ -71,7 +71,6 @@ function CategoryPageContent() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
-
 
   const category = decodeURIComponent(params.category as string);
   const sortBy = searchParams.get('sort') || 'latest';

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button, Card, Badge } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import type { Resource } from '@/types';
@@ -30,9 +31,11 @@ function ResourceCard({ resource }: { resource: Resource }) {
   return (
     <Card className="overflow-hidden group hover:shadow-lg transition-shadow duration-200">
       <div className="relative aspect-video overflow-hidden">
-        <img
+        <Image
           src={resource.thumbnail}
           alt={resource.title}
+          width={400}
+          height={225}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
         <div className="absolute top-2 left-2">
@@ -98,9 +101,11 @@ function ResourceCard({ resource }: { resource: Resource }) {
             )}
           </div>
           <div className="flex items-center text-sm text-gray-500">
-            <img
+            <Image
               src={resource.author.avatar || 'https://via.placeholder.com/20'}
               alt={resource.author.name}
+              width={20}
+              height={20}
               className="w-5 h-5 rounded-full mr-2"
             />
             <span>{resource.author.name}</span>

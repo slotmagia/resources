@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import { MainLayout } from '@/components/layout';
 import { Button, Card, Badge } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
@@ -205,9 +206,11 @@ export default function ResourceDetailPage() {
               <Card className="overflow-hidden">
                 {/* 主图 */}
                 <div className="aspect-video bg-gray-100">
-                  <img
+                  <Image
                     src={resource.gallery[selectedImageIndex]}
                     alt={resource.title}
+                    width={800}
+                    height={450}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -226,9 +229,11 @@ export default function ResourceDetailPage() {
                               : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
-                          <img
+                          <Image
                             src={image}
                             alt={`${resource.title} ${index + 1}`}
+                            width={80}
+                            height={80}
                             className="w-full h-full object-cover"
                           />
                         </button>
@@ -262,9 +267,11 @@ export default function ResourceDetailPage() {
                   
                   {/* 作者信息 */}
                   <div className="flex items-center space-x-3 mb-4">
-                    <img
-                      src={resource.author.avatar}
+                    <Image
+                      src={resource.author.avatar || 'https://via.placeholder.com/40'}
                       alt={resource.author.name}
+                      width={40}
+                      height={40}
                       className="w-10 h-10 rounded-full"
                     />
                     <div>
@@ -446,9 +453,11 @@ export default function ResourceDetailPage() {
                   {comments.map((comment) => (
                     <div key={comment.id} className="border-b border-gray-200 pb-6">
                       <div className="flex items-start space-x-4">
-                        <img
-                          src={comment.author.avatar}
+                        <Image
+                          src={comment.author.avatar || 'https://via.placeholder.com/40'}
                           alt={comment.author.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full"
                         />
                         <div className="flex-1">

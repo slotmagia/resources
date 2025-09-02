@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { Button, Card, Select } from '@/components/ui';
@@ -151,9 +152,11 @@ export default function CartPage() {
                         {/* 商品图片 */}
                         <Link href={`/resources/${item.resourceId}`} className="flex-shrink-0">
                           <div className="relative w-24 h-24 rounded-lg overflow-hidden">
-                            <img
+                            <Image
                               src={item.thumbnail}
                               alt={item.title}
+                              width={96}
+                              height={96}
                               className="w-full h-full object-cover"
                             />
                             {resource?.type && (
@@ -180,9 +183,11 @@ export default function CartPage() {
                           <div className="mt-2 flex items-center text-xs text-gray-500 space-x-2">
                             {resource?.author && (
                               <span className="inline-flex items-center">
-                                <img
+                                <Image
                                   src={resource.author.avatar || 'https://via.placeholder.com/20'}
                                   alt={resource.author.name}
+                                  width={16}
+                                  height={16}
                                   className="w-4 h-4 rounded-full mr-1"
                                 />
                                 <span>{resource.author.name}</span>

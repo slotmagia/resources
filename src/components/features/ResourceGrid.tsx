@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, Badge, Button } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 import { useCartStore } from '@/stores';
@@ -78,9 +79,11 @@ function ResourceCard({ resource, viewMode }: { resource: Resource; viewMode: 'g
           <div className="flex space-x-4">
             <Link href={`/resources/${resource.id}`} className="flex-shrink-0">
               <div className="relative w-24 h-24 rounded-lg overflow-hidden">
-                <img
+                <Image
                   src={resource.thumbnail}
                   alt={resource.title}
+                  width={96}
+                  height={96}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-1 left-1">
@@ -103,9 +106,11 @@ function ResourceCard({ resource, viewMode }: { resource: Resource; viewMode: 'g
               
               <div className="flex items-center space-x-4 text-sm text-gray-500">
                 <div className="flex items-center">
-                  <img
+                  <Image
                     src={resource.author.avatar || 'https://via.placeholder.com/20'}
                     alt={resource.author.name}
+                    width={16}
+                    height={16}
                     className="w-4 h-4 rounded-full mr-1"
                   />
                   <span>{resource.author.name}</span>
@@ -182,9 +187,11 @@ function ResourceCard({ resource, viewMode }: { resource: Resource; viewMode: 'g
     <Card className="overflow-hidden group hover:shadow-lg transition-shadow duration-200">
       <Link href={`/resources/${resource.id}`}>
         <div className="relative aspect-video overflow-hidden">
-          <img
+          <Image
             src={resource.thumbnail}
             alt={resource.title}
+            width={400}
+            height={225}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
           />
           <div className="absolute top-2 left-2">
@@ -253,9 +260,11 @@ function ResourceCard({ resource, viewMode }: { resource: Resource; viewMode: 'g
             )}
           </div>
           <div className="flex items-center text-sm text-gray-500">
-            <img
+            <Image
               src={resource.author.avatar || 'https://via.placeholder.com/20'}
               alt={resource.author.name}
+              width={20}
+              height={20}
               className="w-5 h-5 rounded-full mr-2"
             />
             <span>{resource.author.name}</span>

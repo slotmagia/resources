@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { Card } from '@/components/ui';
@@ -161,9 +162,11 @@ export default function DashboardPage() {
           {/* 欢迎区域 */}
           <div className="mb-8">
             <div className="flex items-center space-x-4 mb-4">
-              <img
+              <Image
                 src={user.avatar || 'https://via.placeholder.com/60'}
                 alt={user.name}
+                width={60}
+                height={60}
                 className="w-15 h-15 rounded-full"
               />
               <div>
@@ -242,9 +245,11 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   {recentDownloads.map((download) => (
                     <div key={download.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <img
+                      <Image
                         src={download.thumbnail}
                         alt={download.title}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-lg object-cover"
                       />
                       <div className="flex-1 min-w-0">

@@ -5,6 +5,7 @@ import { MainLayout } from '@/components/layout';
 import { useAuthStore } from '@/stores';
 import { Button, Input, Card } from '@/components/ui';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { user, isAuthenticated, updateUser } = useAuthStore();
@@ -124,9 +125,11 @@ export default function ProfilePage() {
                     <div className="relative mb-6">
                       <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden">
                         {formData.avatar ? (
-                          <img
+                          <Image
                             src={formData.avatar}
                             alt="头像"
+                            width={128}
+                            height={128}
                             className="w-full h-full object-cover"
                           />
                         ) : (

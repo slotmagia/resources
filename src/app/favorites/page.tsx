@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { MainLayout } from '@/components/layout';
 import { useAuthStore } from '@/stores';
 import { Button, Card, Input, Badge } from '@/components/ui';
@@ -379,9 +380,11 @@ export default function FavoritesPage() {
                       <div className={`${viewMode === 'list' ? 'flex w-full' : ''}`}>
                         {/* 图片区域 */}
                         <div className={`relative ${viewMode === 'list' ? 'w-48 flex-shrink-0' : ''}`}>
-                          <img
+                          <Image
                             src={item.thumbnail}
                             alt={item.title}
+                            width={viewMode === 'list' ? 192 : 400}
+                            height={viewMode === 'list' ? 128 : 192}
                             className={`w-full object-cover ${
                               viewMode === 'list' ? 'h-32' : 'h-48'
                             } rounded-t-lg ${viewMode === 'list' ? 'rounded-l-lg rounded-tr-none' : ''}`}
@@ -426,9 +429,11 @@ export default function FavoritesPage() {
                             
                             {/* 作者信息 */}
                             <div className="flex items-center mb-3">
-                              <img
-                                src={item.author.avatar}
+                              <Image
+                                src={item.author.avatar || 'https://via.placeholder.com/24'}
                                 alt={item.author.name}
+                                width={24}
+                                height={24}
                                 className="w-6 h-6 rounded-full mr-2"
                               />
                               <span className="text-sm text-gray-600">{item.author.name}</span>
