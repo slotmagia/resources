@@ -2,16 +2,29 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  email_verified?: boolean;
+  email_verified_at?: string;
   avatar?: string;
-  vipLevel: 'none' | 'basic' | 'premium';
-  vipExpiry?: string;
-  createdAt: string;
-  verified?: boolean;
-  // 个人资料补充字段（页面用到，标为可选）
   bio?: string;
   website?: string;
   company?: string;
   location?: string;
+  vip_level: 'none' | 'basic' | 'premium';
+  vip_expiry?: string;
+  verified: boolean;
+  status: 'active' | 'inactive' | 'banned';
+  last_login_at?: string;
+  last_login_ip?: string;
+  login_count?: number;
+  created_at: string;
+  updated_at: string;
+  // 兼容前端使用的字段名
+  vipLevel?: 'none' | 'basic' | 'premium';
+  vipExpiry?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastLoginAt?: string;
+  oauthProviders?: string[];
 }
 
 export type ResourceType = 'video' | 'software' | 'document' | 'article' | 'file';
@@ -20,7 +33,10 @@ export interface Author {
   id: string;
   name: string;
   avatar?: string;
-  verified?: boolean;
+  bio?: string;
+  verified: boolean;
+  resourceCount?: number;
+  followerCount?: number;
 }
 
 export interface ResourceStats {
@@ -28,6 +44,7 @@ export interface ResourceStats {
   views: number;
   rating: number;
   reviewCount: number;
+  favoriteCount?: number;
 }
 
 export interface Resource {
@@ -39,26 +56,34 @@ export interface Resource {
   thumbnail: string;
   price: number;
   originalPrice?: number;
-  downloadUrl: string;
+  downloadUrl?: string;
+  previewUrl?: string;
   author: Author;
   stats: ResourceStats;
   tags: string[];
+  featured: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface ResourceDetail extends Resource {
   content: string;
-  specifications: Record<string, string>;
-  gallery: string[];
-  fileSize: number;
-  downloadCount: number;
+  specifications?: Record<string, string>;
+  gallery?: string[];
+  fileSize?: number;
   requirements?: string[];
+  userInteraction?: {
+    purchased: boolean;
+    favorited: boolean;
+    rated: number | null;
+    downloaded: boolean;
+  };
 }
 
 export interface Comment {
   id: string;
   content: string;
+  rating?: number;
   author: {
     id: string;
     name: string;
@@ -178,4 +203,104 @@ export interface CardInfo {
   expiryYear: string;
   cvv: string;
   name: string;
+}
+
+// 新增类型定义
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  banner?: string;
+  color?: string;
+  level: number;
+  parent_id?: string;
+  path: string;
+  sort_order: number;
+  resource_count: number;
+  is_featured: boolean;
+  status: 'active' | 'inactive';
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  data?: any;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface FavoriteFolder {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  resourceCount: number;
+  createdAt: string;
+}
+
+export interface Favorite {
+  id: string;
+  resourceId: string;
+  folderId?: string;
+  resource: Resource;
+  createdAt: string;
+}
+
+export interface DownloadHistory {
+  id: string;
+  resourceId: string;
+  resource: Resource;
+  downloadUrl: string;
+  fileName: string;
+  fileSize: number;
+  downloadedAt: string;
+  expiresAt?: string;
+}
+
+export interface UserStats {
+  purchasedResources: number;
+  downloadCount: number;
+  favoriteCount: number;
+  totalSpent: number;
+}
+
+export interface SearchFilters {
+  categories: Array<{
+    name: string;
+    count: number;
+  }>;
+  types: Array<{
+    type: string;
+    name: string;
+    count: number;
+  }>;
+  priceRange: {
+    min: number;
+    max: number;
+  };
+}
+
+export interface SearchResult extends Resource {
+  relevanceScore: number;
+  highlightedTitle?: string;
+  highlightedDescription?: string;
+}
+
+export interface TrendingResource extends Resource {
+  rank: number;
+  rankChange: number;
+  trendingScore: number;
+}
+
+export interface RecommendationGroup {
+  type: 'similar' | 'collaborative' | 'trending';
+  title: string;
+  items: Array<Resource & {
+    reason?: string;
+    similarity?: number;
+  }>;
 }

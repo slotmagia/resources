@@ -92,8 +92,8 @@ export default function ProfilePage() {
     <MainLayout>
       <div className="bg-gray-50 min-h-screen">
         {/* 页面头部 */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-8">
+        <div className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 py-8">
             {/* 面包屑导航 */}
             <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
               <Link href="/" className="hover:text-gray-700">首页</Link>
@@ -114,13 +114,12 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* 头像和基本信息 */}
-              <div className="lg:col-span-1">
-                <Card className="p-6">
-                  <div className="text-center">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 头像和基本信息 */}
+            <div className="lg:col-span-1">
+              <Card className="p-6">
+                <div className="text-center">
                     {/* 头像 */}
                     <div className="relative mb-6">
                       <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden">
@@ -166,7 +165,7 @@ export default function ProfilePage() {
                     <p className="text-gray-600 mb-4">{formData.email}</p>
                     
                     {/* 用户统计 */}
-                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-2 gap-4 pt-4">
                       <div className="text-center">
                         <div className="text-xl font-bold text-blue-600">23</div>
                         <div className="text-xs text-gray-500">已购买</div>
@@ -179,57 +178,57 @@ export default function ProfilePage() {
                   </div>
                 </Card>
 
-                {/* 账户信息 */}
-                <Card className="p-6 mt-6">
-                  <h3 className="font-semibold text-gray-900 mb-4">账户信息</h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">用户ID:</span>
-                      <span className="text-gray-900">{user?.id}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">会员等级:</span>
-                      <span className="text-blue-600 font-medium">{user?.vipLevel || '普通用户'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">注册时间:</span>
-                      <span className="text-gray-900">2024-01-15</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">最后登录:</span>
-                      <span className="text-gray-900">刚刚</span>
-                    </div>
+              {/* 账户信息 */}
+              <Card className="p-6 mt-6">
+                <h3 className="font-semibold text-gray-900 mb-4">账户信息</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">用户ID:</span>
+                    <span className="text-gray-900">{user?.id}</span>
                   </div>
-                </Card>
-              </div>
-
-              {/* 详细信息表单 */}
-              <div className="lg:col-span-2">
-                <Card className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">详细信息</h3>
-                    {isEditing && (
-                      <div className="flex space-x-3">
-                        <Button
-                          variant="outline"
-                          onClick={handleCancel}
-                          disabled={loading}
-                        >
-                          取消
-                        </Button>
-                        <Button
-                          onClick={handleSave}
-                          disabled={loading}
-                        >
-                          {loading ? '保存中...' : '保存'}
-                        </Button>
-                      </div>
-                    )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">会员等级:</span>
+                    <span className="text-blue-600 font-medium">{user?.vipLevel || '普通用户'}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">注册时间:</span>
+                    <span className="text-gray-900">2024-01-15</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">最后登录:</span>
+                    <span className="text-gray-900">刚刚</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* 姓名 */}
-                    <div>
+            {/* 详细信息表单 */}
+            <div className="lg:col-span-2">
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900">详细信息</h3>
+                  {isEditing && (
+                    <div className="flex space-x-3">
+                      <Button
+                        variant="outline"
+                        onClick={handleCancel}
+                        disabled={loading}
+                      >
+                        取消
+                      </Button>
+                      <Button
+                        onClick={handleSave}
+                        disabled={loading}
+                      >
+                        {loading ? '保存中...' : '保存'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* 姓名 */}
+                  <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         姓名
                       </label>
@@ -345,46 +344,45 @@ export default function ProfilePage() {
                   </div>
                 </Card>
 
-                {/* 安全设置 */}
-                <Card className="p-6 mt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-6">安全设置</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <h4 className="font-medium text-gray-900">修改密码</h4>
-                        <p className="text-sm text-gray-600">定期更换密码以保护账户安全</p>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        修改密码
-                      </Button>
+              {/* 安全设置 */}
+              <Card className="p-6 mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">安全设置</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-gray-900">修改密码</h4>
+                      <p className="text-sm text-gray-600">定期更换密码以保护账户安全</p>
                     </div>
-                    
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <h4 className="font-medium text-gray-900">两步验证</h4>
-                        <p className="text-sm text-gray-600">为您的账户添加额外的安全保护</p>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        启用
-                      </Button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <h4 className="font-medium text-gray-900">账户注销</h4>
-                        <p className="text-sm text-gray-600">永久删除您的账户和所有数据</p>
-                      </div>
-                      <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50">
-                        注销账户
-                      </Button>
-                    </div>
+                    <Button variant="outline" size="sm">
+                      修改密码
+                    </Button>
                   </div>
-                </Card>
-              </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-gray-900">两步验证</h4>
+                      <p className="text-sm text-gray-600">为您的账户添加额外的安全保护</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      启用
+                    </Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-gray-900">账户注销</h4>
+                      <p className="text-sm text-gray-600">永久删除您的账户和所有数据</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50">
+                      注销账户
+                    </Button>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </MainLayout>
   );
 }

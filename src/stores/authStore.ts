@@ -3,60 +3,26 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { User, LoginCredentials, RegisterData } from '@/types';
+import { apiClient } from '@/lib/api-client';
+import { normalizeUser } from '@/lib/data-normalizer';
 
 interface AuthStore {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  token: string | null;
   
   // Actions
-  login: (credentials: LoginCredentials) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
-  logout: () => void;
+  login: (credentials: LoginCredentials & { rememberMe?: boolean }) => Promise<void>;
+  register: (data: RegisterData & { confirmPassword: string; agreeTerms: boolean }) => Promise<void>;
+  logout: () => Promise<void>;
   clearError: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  updateUser: (userData: Partial<User>) => Promise<void>;
+  checkAuth: () => Promise<void>;
+  refreshToken: (refreshToken: string) => Promise<void>;
+  initialize: () => void;
 }
-
-// 模拟API调用
-const mockApi = {
-  login: async (credentials: LoginCredentials): Promise<{ user: User; token: string }> => {
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟网络延迟
-    
-    if (credentials.email === 'user@example.com' && credentials.password === 'password') {
-      return {
-        user: {
-          id: '1',
-          name: '用户名',
-          email: credentials.email,
-          avatar: 'https://via.placeholder.com/40',
-          vipLevel: 'basic',
-          vipExpiry: '2024-12-31',
-          createdAt: '2024-01-01',
-          verified: true,
-        },
-        token: 'mock-jwt-token'
-      };
-    }
-    throw new Error('邮箱或密码错误');
-  },
-  
-  register: async (data: RegisterData): Promise<{ user: User; token: string }> => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    return {
-      user: {
-        id: '2',
-        name: data.name,
-        email: data.email,
-        vipLevel: 'none',
-        createdAt: new Date().toISOString(),
-        verified: false,
-      },
-      token: 'mock-jwt-token'
-    };
-  }
-};
 
 export const useAuthStore = create<AuthStore>()(
   devtools(
@@ -66,71 +32,191 @@ export const useAuthStore = create<AuthStore>()(
         isAuthenticated: false,
         loading: false,
         error: null,
+        token: null,
         
         login: async (credentials) => {
           set({ loading: true, error: null });
           try {
-            const { user, token } = await mockApi.login(credentials);
+            const response = await apiClient.auth.login(credentials);
             
-            // 存储token到localStorage
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('token', token);
+            if (response.success && response.data) {
+              const { user, token } = response.data;
+              
+              // 同步token到API客户端
+              apiClient.setToken(token);
+              
+              set({ 
+                user: normalizeUser(user), 
+                token,
+                isAuthenticated: true, 
+                loading: false 
+              });
+            } else {
+              throw new Error(response.error?.message || '登录失败');
             }
-            
-            set({ 
-              user, 
-              isAuthenticated: true, 
-              loading: false 
-            });
           } catch (error) {
             set({ 
               error: error instanceof Error ? error.message : '登录失败', 
               loading: false 
             });
+            throw error;
           }
         },
         
         register: async (data) => {
           set({ loading: true, error: null });
           try {
-            const { user, token } = await mockApi.register(data);
+            const response = await apiClient.auth.register(data);
             
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('token', token);
+            if (response.success && response.data) {
+              const { user, token } = response.data;
+              
+              // 同步token到API客户端
+              apiClient.setToken(token);
+              
+              set({ 
+                user: normalizeUser(user), 
+                token,
+                isAuthenticated: true, 
+                loading: false 
+              });
+            } else {
+              throw new Error(response.error?.message || '注册失败');
             }
-            
-            set({ 
-              user, 
-              isAuthenticated: true, 
-              loading: false 
-            });
           } catch (error) {
             set({ 
               error: error instanceof Error ? error.message : '注册失败', 
               loading: false 
             });
+            throw error;
           }
         },
         
-        logout: () => {
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('token');
+        logout: async () => {
+          const { token } = get();
+          try {
+            if (token) {
+              await apiClient.auth.logout();
+            }
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            // 清除API客户端的token
+            apiClient.setToken(null);
+            
+            set({ 
+              user: null, 
+              token: null,
+              isAuthenticated: false, 
+              error: null 
+            });
           }
-          set({ 
-            user: null, 
-            isAuthenticated: false, 
-            error: null 
-          });
         },
         
         clearError: () => set({ error: null }),
         
-        updateUser: (userData) => {
+        updateUser: async (userData) => {
           const currentUser = get().user;
-          if (currentUser) {
+          if (!currentUser) return;
+
+          set({ loading: true, error: null });
+          try {
+            const response = await apiClient.users.updateProfile(userData);
+            
+            if (response.success && response.data) {
+              set({ 
+                user: { ...currentUser, ...response.data },
+                loading: false
+              });
+            } else {
+              throw new Error(response.error?.message || '更新失败');
+            }
+          } catch (error) {
             set({ 
-              user: { ...currentUser, ...userData } 
+              error: error instanceof Error ? error.message : '更新失败', 
+              loading: false 
             });
+            throw error;
+          }
+        },
+
+        checkAuth: async () => {
+          const { token } = get();
+          if (!token) {
+            // 如果没有token，确保API客户端也清除token
+            apiClient.setToken(null);
+            return;
+          }
+
+          // 同步token到API客户端
+          apiClient.setToken(token);
+
+          set({ loading: true });
+          try {
+            const response = await apiClient.users.getProfile();
+
+            if (response.success && response.data) {
+              set({
+                user: normalizeUser(response.data),
+                isAuthenticated: true,
+                loading: false,
+              });
+            } else {
+              // 用户信息获取失败，清除认证状态
+              apiClient.setToken(null);
+              set({
+                user: null,
+                token: null,
+                isAuthenticated: false,
+                loading: false,
+              });
+            }
+          } catch (error) {
+            console.error('Auth check error:', error);
+            apiClient.setToken(null);
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              loading: false,
+            });
+          }
+        },
+
+        refreshToken: async (refreshToken: string) => {
+          try {
+            const response = await apiClient.auth.refresh(refreshToken);
+
+            if (response.success && response.data) {
+              const { token } = response.data;
+              // 同步token到API客户端
+              apiClient.setToken(token);
+              set({ token });
+            } else {
+              // Token刷新失败，清除认证状态
+              apiClient.setToken(null);
+              set({
+                user: null,
+                token: null,
+                isAuthenticated: false,
+              });
+            }
+          } catch (error) {
+            console.error('Token refresh error:', error);
+            apiClient.setToken(null);
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+            });
+          }
+        },
+
+        // 初始化时同步token到API客户端
+        initialize: () => {
+          const { token } = get();
+          if (token) {
+            apiClient.setToken(token);
           }
         },
       }),
@@ -138,6 +224,7 @@ export const useAuthStore = create<AuthStore>()(
         name: 'auth-store',
         partialize: (state) => ({ 
           user: state.user, 
+          token: state.token,
           isAuthenticated: state.isAuthenticated 
         }),
       }

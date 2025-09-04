@@ -6,3 +6,4 @@ export { Select } from './Select';
 export { Checkbox } from './Checkbox';
 export { Slider } from './Slider';
 export { ViewToggle } from './ViewToggle';
+export { UserBadge } from './UserBadge';
